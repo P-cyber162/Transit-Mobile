@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "TransitOps Driver",
+    "slug": "transitops-driver",
+    "scheme": "transitops-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.transitops.driver"
+    },
+    "android": {
+      "package": "com.transitops.driver",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A1628",
+        "foregroundImage": "./assets/android-icon-foreground.png"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-splash-screen",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "TransitOps requires GPS location tracking to synchronize live bus position with dispatch."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "TransitOps requires access to photos to attach incident evidence."
+        }
+      ]
+    ],
+    "sdkVersion": "54.0.0"
+  }
+}

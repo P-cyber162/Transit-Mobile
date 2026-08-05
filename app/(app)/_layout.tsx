@@ -1,0 +1,53 @@
+// ============================================================
+// app/(app)/_layout.tsx — Protected App Layout Guard
+// ============================================================
+
+import React, { useMemo } from 'react';
+import { Redirect, Stack } from 'expo-router';
+import { View, StyleSheet } from 'react-native';
+import { useAuthStore } from '../../store/auth.store';
+import { SkeletonLoader } from '../../components/ui/SkeletonLoader';
+import { useThemeColors } from '../../hooks/useThemeColors';
+
+export default function AppLayoutGuard() {
+  const { isAuthenticated, isLoading } = useAuthStore();
+  const colors = useThemeColors();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        loadingContainer: {
+          flex: 1,
+          backgroundColor: colors.background,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+      }),
+    [colors]
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <SkeletonLoader width={120} height={120} borderRadiusValue={60} />
+      </View>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)/splash" />;
+  }
+
+  return (
+    <Stack
+      initialRouteName="(tabs)"
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: colors.background },
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="more" />
+    </Stack>
+  );
+}
