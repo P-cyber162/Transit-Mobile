@@ -39,9 +39,6 @@ export default function HistoryScreen() {
       ]);
       setAttendance(Array.isArray(a) ? a : []);
       setIncidents(Array.isArray(i) ? i : []);
-      // #region agent log
-      fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'history.tsx:load',message:'History loaded',data:{attendanceCount:Array.isArray(a)?a.length:0,incidentCount:Array.isArray(i)?i.length:0},timestamp:Date.now(),hypothesisId:'H5',runId:'pre-fix'})}).catch(()=>{});
-      // #endregion
     } catch (err: any) {
       setError(err?.message || 'Failed to load history');
     } finally {

@@ -65,9 +65,6 @@ export default function Home() {
         routesData.find((r) => r.name === shiftData?.routeName) ||
         null;
       setActiveRoute(matched);
-      // #region agent log
-      fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'home.tsx:fetchData',message:'Home dashboard fetch settled',data:{shiftOk:shiftRes.status==='fulfilled',routesOk:routesRes.status==='fulfilled',attOk:attRes.status==='fulfilled',profOk:profRes.status==='fulfilled',hasShift:Boolean(shiftData),routeCount:Array.isArray(routesData)?routesData.length:0,hasAttendance:Boolean(attData),hasProfile:Boolean(profData),employeeId:profData?.employeeId??null},timestamp:Date.now(),hypothesisId:'H4',runId:'pre-fix'})}).catch(()=>{});
-      // #endregion
       if (
         shiftRes.status === 'rejected' &&
         routesRes.status === 'rejected' &&

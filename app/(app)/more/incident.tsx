@@ -68,9 +68,6 @@ export default function IncidentScreen() {
       if (isOnline) {
         try {
           await incidentsService.submitReport(report);
-          // #region agent log
-          fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'incident.tsx:submit',message:'Incident submitted',data:{category:selectedCategory,severity,hasGps:Boolean(coords?.latitude)},timestamp:Date.now(),hypothesisId:'H5',runId:'pre-fix'})}).catch(()=>{});
-          // #endregion
           showToast('Incident reported', 'success');
         } catch {
           await offlineQueue.queuePendingIncident(report);
