@@ -76,7 +76,10 @@ export default function SettingsScreen() {
         <View style={styles.settingRow}>
           <View style={styles.textGroup}>
             <Text style={styles.settingTitle}>Push Notifications</Text>
-            <Text style={styles.settingSub}>Receive route delay and dispatch alerts</Text>
+            <Text style={styles.settingSub}>
+              Preference saved on device. Device push registration is not available yet
+              (backend Expo push token endpoint pending).
+            </Text>
           </View>
           <Switch
             value={pushNotificationsEnabled}
@@ -84,7 +87,7 @@ export default function SettingsScreen() {
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
             thumbColor={colors.white}
             accessibilityRole="switch"
-            accessibilityLabel="Push Notifications"
+            accessibilityLabel="Push Notifications preference"
             accessibilityState={{ checked: pushNotificationsEnabled }}
           />
         </View>

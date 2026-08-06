@@ -145,12 +145,19 @@ export const apiClient = axios.create({
   timeout: 15000,
 });
 
+// #region agent log
+fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'services/api.ts:init',message:'API client init',data:{baseURL:API_BASE_URL,isDeadHost:String(API_BASE_URL).includes('transitops-backend-production')},timestamp:Date.now(),hypothesisId:'H1',runId:'pre-fix'})}).catch(()=>{});
+// #endregion
+
 apiClient.interceptors.request.use(
   async (config) => {
     const token = await getStoredAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // #region agent log
+    fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'services/api.ts:request',message:'API request',data:{method:config.method,url:config.url,baseURL:config.baseURL||API_BASE_URL,hasAuth:Boolean(token)},timestamp:Date.now(),hypothesisId:'H2',runId:'pre-fix'})}).catch(()=>{});
+    // #endregion
     return config;
   },
   (error) => Promise.reject(error)
@@ -179,9 +186,17 @@ function rejectRefreshWaiters(err: unknown) {
 }
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // #region agent log
+    fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'services/api.ts:response',message:'API success',data:{status:response.status,url:response.config?.url,method:response.config?.method},timestamp:Date.now(),hypothesisId:'H4',runId:'pre-fix'})}).catch(()=>{});
+    // #endregion
+    return response;
+  },
   async (error: AxiosError) => {
     const originalRequest: any = error.config;
+    // #region agent log
+    fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'services/api.ts:error',message:'API error',data:{status:error.response?.status??null,url:originalRequest?.url,method:originalRequest?.method,code:error.code??null,message:error.message},timestamp:Date.now(),hypothesisId:'H1',runId:'pre-fix'})}).catch(()=>{});
+    // #endregion
 
     if (
       error.response?.status === 401 &&

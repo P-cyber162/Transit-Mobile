@@ -37,8 +37,14 @@ export default function MoreMenu() {
       route: '/(app)/more/attendance',
     },
     {
+      title: 'My History',
+      subtitle: 'Attendance records and reported incidents',
+      icon: '🕐',
+      route: '/(app)/more/history',
+    },
+    {
       title: 'Report Incident',
-      subtitle: 'Report breakdown, accident, or traffic issue',
+      subtitle: 'Report mechanical, traffic, safety, or passenger issues',
       icon: '⚠️',
       route: '/(app)/more/incident',
     },

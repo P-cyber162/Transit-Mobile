@@ -5,7 +5,6 @@
 import { apiClient } from './api';
 import { unwrapList } from '../utils/apiHelpers';
 import { Route, RouteStop, Schedule } from '../types';
-import { KNUST_SEED_ROUTES, KNUST_SEED_STOPS } from './routeSeeds';
 
 function mapRoute(r: any): Route {
   const statusRaw = String(r.status || 'Active');
@@ -53,8 +52,6 @@ function mapSchedule(s: any): Schedule {
     notes: s.notes,
   };
 }
-
-export { KNUST_SEED_ROUTES, KNUST_SEED_STOPS };
 
 export const routesService = {
   async getRoutes(): Promise<Route[]> {

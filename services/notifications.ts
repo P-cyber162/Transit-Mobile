@@ -5,7 +5,6 @@
 import { apiClient } from './api';
 import { unwrapList, formatTimeLabel } from '../utils/apiHelpers';
 import { OperationalNotification } from '../types';
-import { SEED_NOTIFICATIONS } from './notificationSeeds';
 
 function mapPriorityToType(priority?: string, category?: string): OperationalNotification['type'] {
   const p = (priority || '').toUpperCase();
@@ -28,17 +27,10 @@ function mapNotification(n: any): OperationalNotification {
   };
 }
 
-export { SEED_NOTIFICATIONS };
-
 export const notificationsService = {
   async getNotifications(): Promise<OperationalNotification[]> {
     const response = await apiClient.get('/notifications', { params: { size: 50 } });
     return unwrapList(response.data).map(mapNotification);
-  },
-
-  /** Dev-only sample data — never used as a silent production fallback. */
-  getDemoNotifications(): OperationalNotification[] {
-    return __DEV__ ? SEED_NOTIFICATIONS : [];
   },
 
   async markAsRead(notificationId: string): Promise<boolean> {
@@ -59,6 +51,7 @@ export const notificationsService = {
     }
   },
 
+  /** Reserved until backend exposes an Expo push-token registration endpoint. */
   async registerPushToken(_token: string): Promise<boolean> {
     return false;
   },

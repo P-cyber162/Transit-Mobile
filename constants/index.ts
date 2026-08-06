@@ -3,19 +3,23 @@
 // ============================================================
 
 /**
- * API base must end with /api (no trailing slash after).
+ * Canonical production API (same host as TransitOps web).
  * Override at runtime with EXPO_PUBLIC_API_URL, e.g.:
  *   EXPO_PUBLIC_API_URL=https://xxxx.ngrok-free.app/api
- * Railway production URL is the default when env is unset.
  */
+const DEFAULT_PROD_API = 'https://web-production-f8ec21.up.railway.app/api';
+
+/** Hosts known to be decommissioned — never use as live base. */
+const DEAD_API_HOSTS = ['transitops-backend-production.up.railway.app'];
+
 const rawApi =
   (typeof process !== 'undefined' && process.env?.EXPO_PUBLIC_API_URL) ||
-  'https://transitops-backend-production.up.railway.app/api';
+  DEFAULT_PROD_API;
 
 function normalizeApiBase(url: string): string {
   let base = (url || '').trim().replace(/\/$/, '');
-  if (!base) {
-    base = 'https://transitops-backend-production.up.railway.app/api';
+  if (!base || DEAD_API_HOSTS.some((host) => base.includes(host))) {
+    base = DEFAULT_PROD_API;
   }
   if (/^https?:\/\//.test(base) && !base.endsWith('/api')) {
     base = `${base}/api`;

@@ -53,9 +53,18 @@ export default function Login() {
         setRememberMeEmail('');
       }
 
+      // #region agent log
+      fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'login.tsx:handleSignIn',message:'Login attempt',data:{emailDomain:email.trim().split('@')[1]||'',hasPassword:Boolean(password)},timestamp:Date.now(),hypothesisId:'H3',runId:'pre-fix'})}).catch(()=>{});
+      // #endregion
       await login(email.trim(), password);
+      // #region agent log
+      fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'login.tsx:success',message:'Login success',data:{ok:true},timestamp:Date.now(),hypothesisId:'H3',runId:'pre-fix'})}).catch(()=>{});
+      // #endregion
       router.replace('/(app)/(tabs)/home');
-    } catch {
+    } catch (err: any) {
+      // #region agent log
+      fetch('http://127.0.0.1:7286/ingest/926a4354-0f22-4cf3-8f8e-c1576631fccf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d8ec94'},body:JSON.stringify({sessionId:'d8ec94',location:'login.tsx:fail',message:'Login failed',data:{errMsg:String(err?.message||err||'unknown')},timestamp:Date.now(),hypothesisId:'H3',runId:'pre-fix'})}).catch(()=>{});
+      // #endregion
       // Error handled by store
     }
   };

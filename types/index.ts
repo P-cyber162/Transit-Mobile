@@ -90,23 +90,26 @@ export interface AttendanceRecord {
   status: 'PRESENT' | 'LATE' | 'ABSENT' | 'ON_DUTY';
 }
 
-export type IncidentCategory = 
-  | 'ACCIDENT'
+/** Matches web driver incident categories (source of truth). */
+export type IncidentCategory =
+  | 'MECHANICAL'
   | 'TRAFFIC'
-  | 'VEHICLE_BREAKDOWN'
-  | 'PASSENGER_ISSUE'
-  | 'ROAD_CLOSURE'
+  | 'SAFETY'
+  | 'PASSENGER'
   | 'OTHER';
+
+export type IncidentSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
 export interface IncidentReport {
   id?: string;
+  title?: string;
   category: IncidentCategory;
+  severity?: IncidentSeverity;
   description: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   timestamp: string;
-  photoUri?: string;
-  status?: 'SUBMITTED' | 'UNDER_REVIEW' | 'RESOLVED';
+  status?: 'SUBMITTED' | 'UNDER_REVIEW' | 'RESOLVED' | 'OPEN';
 }
 
 export interface OperationalNotification {
