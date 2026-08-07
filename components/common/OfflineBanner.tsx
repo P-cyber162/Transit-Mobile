@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useUIStore } from '../../store/ui.store';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
@@ -27,8 +28,9 @@ export const OfflineBanner: React.FC = () => {
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"
     >
+      <Ionicons name="cloud-offline-outline" size={14} color={colors.textInverse} />
       <Text style={[styles.text, { color: colors.textInverse }]}>
-        ⚠️ Offline — API unreachable. Incident reports will queue for sync.
+        Offline — API unreachable. Incident reports will queue for sync.
       </Text>
     </View>
   );
@@ -40,6 +42,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 6,
   },
   text: {
     fontSize: 11,

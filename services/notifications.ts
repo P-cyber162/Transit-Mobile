@@ -51,8 +51,24 @@ export const notificationsService = {
     }
   },
 
-  /** Reserved until backend exposes an Expo push-token registration endpoint. */
-  async registerPushToken(_token: string): Promise<boolean> {
-    return false;
+  /** Register Expo push token with backend (stored alongside web push subs). */
+  async registerPushToken(token: string, platform: string = 'unknown'): Promise<boolean> {
+    if (!token) return false;
+    try {
+      await apiClient.post('/push/device-token', { token, platform });
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  async unregisterPushToken(token: string): Promise<boolean> {
+    if (!token) return false;
+    try {
+      await apiClient.delete('/push/device-token', { data: { token } });
+      return true;
+    } catch {
+      return false;
+    }
   },
 };

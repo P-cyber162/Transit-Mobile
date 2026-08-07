@@ -2,7 +2,7 @@
 // app/(app)/more/settings.tsx — Driver Settings Screen
 // ============================================================
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,10 @@ import {
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../../store/auth.store';
 import { useUIStore } from '../../../store/ui.store';
+import {
+  enablePushNotifications,
+  disablePushNotifications,
+} from '../../../services/pushNotifications';
 import { spacing, borderRadius } from '../../../theme';
 import { useThemeColors } from '../../../hooks/useThemeColors';
 import { Card } from '../../../components/ui/Card';
@@ -29,10 +33,45 @@ export default function SettingsScreen() {
     isDarkMode,
     toggleDarkMode,
     pushNotificationsEnabled,
-    togglePushNotifications,
-    language,
-    setLanguage,
+    setPushNotificationsEnabled,
+    showToast,
   } = useUIStore();
+  const [pushBusy, setPushBusy] = useState(false);
+
+  const handlePushToggle = async (next: boolean) => {
+    if (pushBusy) return;
+    setPushBusy(true);
+    try {
+      if (next) {
+        const result = await enablePushNotifications();
+        if (result.status !== 'granted' || !result.token) {
+          setPushNotificationsEnabled(false);
+          Alert.alert(
+            'Notifications blocked',
+            result.error ||
+              'Enable notifications for TransitOps in your device settings, then try again.'
+          );
+          return;
+        }
+        setPushNotificationsEnabled(true);
+        showToast(
+          result.registered
+            ? 'Push notifications enabled and registered with dispatch.'
+            : 'Push enabled on this device. Server registration pending deploy.',
+          result.registered ? 'success' : 'warning'
+        );
+      } else {
+        await disablePushNotifications();
+        setPushNotificationsEnabled(false);
+        showToast('Push notifications disabled on this device.', 'info');
+      }
+    } catch (err: any) {
+      setPushNotificationsEnabled(false);
+      showToast(err?.message || 'Could not update push notifications.', 'error');
+    } finally {
+      setPushBusy(false);
+    }
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -54,7 +93,6 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Display & Appearance */}
       <Text style={styles.sectionTitle}>Appearance & Preferences</Text>
       <Card style={styles.card}>
         <View style={styles.settingRow}>
@@ -77,18 +115,19 @@ export default function SettingsScreen() {
           <View style={styles.textGroup}>
             <Text style={styles.settingTitle}>Push Notifications</Text>
             <Text style={styles.settingSub}>
-              Preference saved on device. Device push registration is not available yet
-              (backend Expo push token endpoint pending).
+              Receive route delay and dispatch alerts on this device
+              {pushBusy ? ' (updating…)' : ''}
             </Text>
           </View>
           <Switch
             value={pushNotificationsEnabled}
-            onValueChange={togglePushNotifications}
+            onValueChange={handlePushToggle}
+            disabled={pushBusy}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
             thumbColor={colors.white}
             accessibilityRole="switch"
-            accessibilityLabel="Push Notifications preference"
-            accessibilityState={{ checked: pushNotificationsEnabled }}
+            accessibilityLabel="Push Notifications"
+            accessibilityState={{ checked: pushNotificationsEnabled, disabled: pushBusy }}
           />
         </View>
 
@@ -101,7 +140,6 @@ export default function SettingsScreen() {
         </View>
       </Card>
 
-      {/* Account Actions */}
       <Text style={styles.sectionTitle}>Account Actions</Text>
       <Card style={styles.card}>
         <Button
@@ -113,7 +151,6 @@ export default function SettingsScreen() {
         />
       </Card>
 
-      {/* App Info */}
       <View style={styles.infoFooter}>
         <Text style={styles.brandTitle}>TransitOps Driver Mobile</Text>
         <Text style={styles.versionText}>Version 1.0.0 (Build 2026.08)</Text>
@@ -124,81 +161,79 @@ export default function SettingsScreen() {
   );
 }
 
-
-
 function makeStyles(colors: ReturnType<typeof useThemeColors>) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: spacing.base,
-  },
-  sectionTitle: {
-    color: colors.textPrimary,
-    fontSize: 15,
-    fontWeight: '700',
-    marginBottom: spacing.md,
-  },
-  card: {
-    padding: 0,
-    marginBottom: spacing.lg,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: spacing.base,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.surfaceBorder,
-  },
-  textGroup: {
-    flex: 1,
-    paddingRight: spacing.md,
-  },
-  settingTitle: {
-    color: colors.textPrimary,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  settingSub: {
-    color: colors.textMuted,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  langValue: {
-    color: colors.primary,
-    fontWeight: '700',
-    fontSize: 13,
-  },
-  fullBtn: {
-    margin: spacing.base,
-  },
-  infoFooter: {
-    alignItems: 'center',
-    marginTop: spacing.xl,
-  },
-  brandTitle: {
-    color: colors.textPrimary,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  versionText: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 2,
-  },
-  subInfo: {
-    color: colors.textMuted,
-    fontSize: 11,
-    marginTop: 4,
-  },
-  copyright: {
-    color: colors.textMuted,
-    fontSize: 10,
-    marginTop: 16,
-  },
-});
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      padding: spacing.base,
+    },
+    sectionTitle: {
+      color: colors.textPrimary,
+      fontSize: 15,
+      fontWeight: '700',
+      marginBottom: spacing.md,
+    },
+    card: {
+      padding: 0,
+      marginBottom: spacing.lg,
+    },
+    settingRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: spacing.base,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.surfaceBorder,
+    },
+    textGroup: {
+      flex: 1,
+      paddingRight: spacing.md,
+    },
+    settingTitle: {
+      color: colors.textPrimary,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    settingSub: {
+      color: colors.textMuted,
+      fontSize: 11,
+      marginTop: 2,
+    },
+    langValue: {
+      color: colors.primary,
+      fontWeight: '700',
+      fontSize: 13,
+    },
+    fullBtn: {
+      margin: spacing.base,
+    },
+    infoFooter: {
+      alignItems: 'center',
+      marginTop: spacing.xl,
+    },
+    brandTitle: {
+      color: colors.textPrimary,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    versionText: {
+      color: colors.primary,
+      fontSize: 12,
+      fontWeight: '600',
+      marginTop: 2,
+    },
+    subInfo: {
+      color: colors.textMuted,
+      fontSize: 11,
+      marginTop: 4,
+    },
+    copyright: {
+      color: colors.textMuted,
+      fontSize: 10,
+      marginTop: 16,
+    },
+  });
 }

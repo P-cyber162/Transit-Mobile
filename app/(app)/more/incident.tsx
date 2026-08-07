@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useLocation } from '../../../hooks/useLocation';
 import { useUIStore } from '../../../store/ui.store';
 import { incidentsService } from '../../../services/incidents';
@@ -23,12 +24,16 @@ import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
 import { IncidentCategory, IncidentReport, IncidentSeverity } from '../../../types';
 
-const CATEGORIES: { label: string; value: IncidentCategory; icon: string }[] = [
-  { label: 'Mechanical', value: 'MECHANICAL', icon: '🔧' },
-  { label: 'Traffic', value: 'TRAFFIC', icon: '🚦' },
-  { label: 'Safety', value: 'SAFETY', icon: '🛡️' },
-  { label: 'Passenger', value: 'PASSENGER', icon: '🗣️' },
-  { label: 'Other', value: 'OTHER', icon: '⚠️' },
+const CATEGORIES: {
+  label: string;
+  value: IncidentCategory;
+  icon: keyof typeof Ionicons.glyphMap;
+}[] = [
+  { label: 'Mechanical', value: 'MECHANICAL', icon: 'construct-outline' },
+  { label: 'Traffic', value: 'TRAFFIC', icon: 'car-outline' },
+  { label: 'Safety', value: 'SAFETY', icon: 'shield-checkmark-outline' },
+  { label: 'Passenger', value: 'PASSENGER', icon: 'people-outline' },
+  { label: 'Other', value: 'OTHER', icon: 'warning-outline' },
 ];
 
 const SEVERITIES: IncidentSeverity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
@@ -112,7 +117,12 @@ export default function IncidentScreen() {
               accessibilityLabel={cat.label}
               accessibilityState={{ selected: isSelected }}
             >
-              <Text style={styles.catIcon}>{cat.icon}</Text>
+              <Ionicons
+                name={cat.icon}
+                size={22}
+                color={isSelected ? colors.statusCritical : colors.textSecondary}
+                style={styles.catIcon}
+              />
               <Text style={[styles.catLabel, isSelected ? styles.catLabelSelected : null]}>
                 {cat.label}
               </Text>
@@ -144,7 +154,7 @@ export default function IncidentScreen() {
 
       <Card style={styles.gpsCard}>
         <View style={styles.gpsRow}>
-          <Text style={styles.gpsIcon}>📍</Text>
+          <Ionicons name="location" size={22} color={colors.primary} />
           <View>
             <Text style={styles.gpsTitle}>GPS Location (optional)</Text>
             <Text style={styles.gpsCoords}>
@@ -216,7 +226,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
       borderColor: colors.statusCritical,
     },
     catIcon: {
-      fontSize: 22,
       marginBottom: 4,
     },
     catLabel: {
@@ -262,9 +271,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
       flexDirection: 'row',
       alignItems: 'center',
       gap: spacing.md,
-    },
-    gpsIcon: {
-      fontSize: 20,
     },
     gpsTitle: {
       color: colors.textPrimary,

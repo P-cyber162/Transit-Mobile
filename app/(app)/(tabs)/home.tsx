@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../../store/auth.store';
 import { driverService } from '../../../services/driver';
 import { routesService } from '../../../services/routes';
@@ -124,7 +125,7 @@ export default function Home() {
           accessibilityRole="button"
           accessibilityLabel="Open more menu"
         >
-          <Text style={styles.menuIcon}>⚙️</Text>
+          <Ionicons name="settings-outline" size={20} color={colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -139,7 +140,7 @@ export default function Home() {
       <Card style={styles.shiftCard}>
         <View style={styles.cardHeader}>
           <View style={styles.headerTitleGroup}>
-            <Text style={styles.cardIcon}>⏱️</Text>
+            <Ionicons name="time-outline" size={18} color={colors.primary} style={styles.cardIcon} />
             <Text style={styles.cardTitle}>Current Shift</Text>
           </View>
           <Badge
@@ -235,7 +236,7 @@ export default function Home() {
           style={styles.quickCard}
           onPress={() => router.push('/(app)/(tabs)/trip')}
         >
-          <Text style={styles.quickIcon}>▶️</Text>
+          <Ionicons name="play-circle-outline" size={28} color={colors.primary} style={styles.quickIcon} />
           <Text style={styles.quickTitle}>Trip Controls</Text>
           <Text style={styles.quickDesc}>Start/Pause/End</Text>
         </TouchableOpacity>
@@ -244,7 +245,7 @@ export default function Home() {
           style={styles.quickCard}
           onPress={() => router.push('/(app)/more/attendance')}
         >
-          <Text style={styles.quickIcon}>📋</Text>
+          <Ionicons name="clipboard-outline" size={28} color={colors.primary} style={styles.quickIcon} />
           <Text style={styles.quickTitle}>Attendance</Text>
           <Text style={styles.quickDesc}>Check In / Out</Text>
         </TouchableOpacity>
@@ -253,7 +254,7 @@ export default function Home() {
           style={styles.quickCard}
           onPress={() => router.push('/(app)/more/incident')}
         >
-          <Text style={styles.quickIcon}>⚠️</Text>
+          <Ionicons name="warning-outline" size={28} color={colors.statusCritical} style={styles.quickIcon} />
           <Text style={styles.quickTitle}>Report Incident</Text>
           <Text style={styles.quickDesc}>Accident, Traffic, etc.</Text>
         </TouchableOpacity>
@@ -262,7 +263,7 @@ export default function Home() {
           style={styles.quickCard}
           onPress={() => router.push('/(app)/more/profile')}
         >
-          <Text style={styles.quickIcon}>👤</Text>
+          <Ionicons name="person-outline" size={28} color={colors.primary} style={styles.quickIcon} />
           <Text style={styles.quickTitle}>My Profile</Text>
           <Text style={styles.quickDesc}>View details</Text>
         </TouchableOpacity>
@@ -331,9 +332,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menuIcon: {
-    fontSize: 18,
-  },
   shiftCard: {
     marginBottom: spacing.base,
   },
@@ -359,7 +357,7 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     gap: 6,
   },
   cardIcon: {
-    fontSize: 16,
+    marginRight: 4,
   },
   colorDot: {
     width: 10,
@@ -476,7 +474,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     padding: spacing.md,
   },
   quickIcon: {
-    fontSize: 24,
     marginBottom: 8,
   },
   quickTitle: {

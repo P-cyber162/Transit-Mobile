@@ -2,15 +2,18 @@
 // app/(app)/_layout.tsx — Protected App Layout Guard
 // ============================================================
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Redirect, Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { useAuthStore } from '../../store/auth.store';
+import { useUIStore } from '../../store/ui.store';
+import { enablePushNotifications } from '../../services/pushNotifications';
 import { SkeletonLoader } from '../../components/ui/SkeletonLoader';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
 export default function AppLayoutGuard() {
   const { isAuthenticated, isLoading } = useAuthStore();
+  const { pushNotificationsEnabled } = useUIStore();
   const colors = useThemeColors();
   const styles = useMemo(
     () =>
@@ -24,6 +27,11 @@ export default function AppLayoutGuard() {
       }),
     [colors]
   );
+
+  useEffect(() => {
+    if (!isAuthenticated || !pushNotificationsEnabled) return;
+    enablePushNotifications().catch(() => {});
+  }, [isAuthenticated, pushNotificationsEnabled]);
 
   if (isLoading) {
     return (

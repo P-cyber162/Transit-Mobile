@@ -4,7 +4,7 @@
 
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -14,6 +14,10 @@ import { OfflineBanner } from '../components/common/OfflineBanner';
 import { useThemeColors } from '../hooks/useThemeColors';
 import { useNetwork } from '../hooks/useNetwork';
 import { API_BASE_URL } from '../constants';
+import {
+  addNotificationResponseListener,
+  enablePushNotifications,
+} from '../services/pushNotifications';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -86,16 +90,34 @@ function RootNavigator() {
   );
 }
 
-export default function RootLayout() {
-  const { loadPreferences } = useUIStore();
+function PushBootstrap() {
+  const { loadPreferences, pushNotificationsEnabled } = useUIStore();
 
   useEffect(() => {
     loadPreferences();
   }, [loadPreferences]);
 
+  useEffect(() => {
+    const sub = addNotificationResponseListener(() => {
+      router.push('/(app)/(tabs)/notifications');
+    });
+    return () => sub.remove();
+  }, []);
+
+  useEffect(() => {
+    if (!pushNotificationsEnabled) return;
+    // Re-register token after prefs load / login session may attach later
+    enablePushNotifications().catch(() => {});
+  }, [pushNotificationsEnabled]);
+
+  return null;
+}
+
+export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
+        <PushBootstrap />
         <NetworkMonitor />
         <RootNavigator />
       </SafeAreaProvider>

@@ -15,6 +15,7 @@ import {
   Switch,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/auth.store';
 import { useUIStore } from '../../store/ui.store';
 import { spacing, borderRadius } from '../../theme';
@@ -71,7 +72,7 @@ export default function Login() {
       >
         <View style={styles.headerSection}>
           <View style={styles.logoBadge}>
-            <Text style={styles.logoIcon}>🚌</Text>
+            <Ionicons name="bus" size={32} color={colors.white} />
           </View>
           <Text style={styles.brandTitle}>TransitOps</Text>
           <Text style={styles.subtitle}>Driver Companion Portal</Text>
@@ -86,7 +87,8 @@ export default function Login() {
 
           {error && (
             <View style={styles.errorAlert}>
-              <Text style={styles.errorAlertText}>⚠️ {error}</Text>
+              <Ionicons name="warning" size={16} color={colors.statusCritical} style={styles.errorIcon} />
+              <Text style={styles.errorAlertText}>{error}</Text>
             </View>
           )}
 
@@ -141,7 +143,10 @@ export default function Login() {
         </View>
 
         <View style={styles.footerInfo}>
-          <Text style={styles.restrictedBadge}>🔒 DRIVER ROLE ONLY</Text>
+          <View style={styles.restrictedRow}>
+            <Ionicons name="lock-closed" size={12} color={colors.statusDelayed} />
+            <Text style={styles.restrictedBadge}> DRIVER ROLE ONLY</Text>
+          </View>
           <Text style={styles.footerText}>
             Access to this mobile client is strictly restricted to assigned transit bus drivers.
           </Text>
@@ -178,9 +183,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
-  },
-  logoIcon: {
-    fontSize: 32,
   },
   brandTitle: {
     color: colors.textPrimary,
@@ -230,11 +232,18 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     padding: spacing.md,
     borderRadius: borderRadius.md,
     marginBottom: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+  },
+  errorIcon: {
+    marginTop: 1,
   },
   errorAlertText: {
     color: colors.statusCritical,
     fontSize: 13,
     lineHeight: 18,
+    flex: 1,
   },
   showHideText: {
     color: colors.primary,
@@ -263,12 +272,16 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     alignItems: 'center',
     marginTop: 32,
   },
+  restrictedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
   restrictedBadge: {
     color: colors.statusDelayed,
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 0.5,
-    marginBottom: 6,
   },
   footerText: {
     color: colors.textMuted,

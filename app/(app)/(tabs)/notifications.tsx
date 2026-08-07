@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { notificationsService } from '../../../services/notifications';
 import { useUIStore } from '../../../store/ui.store';
 import { spacing, borderRadius } from '../../../theme';
@@ -91,14 +92,14 @@ export default function NotificationsScreen() {
     }
   };
 
-  const getTypeIcon = (type: string) => {
+  const getTypeIcon = (type: string): keyof typeof Ionicons.glyphMap => {
     switch (type) {
       case 'ALERT':
-        return '🚨';
+        return 'alert-circle';
       case 'SUCCESS':
-        return '✅';
+        return 'checkmark-circle';
       default:
-        return 'ℹ️';
+        return 'information-circle';
     }
   };
 
@@ -136,13 +137,13 @@ export default function NotificationsScreen() {
           </Card>
         ) : error ? (
           <Card style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>⚠️</Text>
+            <Ionicons name="warning-outline" size={44} color={colors.statusCritical} style={styles.emptyIcon} />
             <Text style={styles.emptyTitle}>{error}</Text>
             <Button title="RETRY" variant="primary" size="sm" onPress={fetchNotifs} style={{ marginTop: 12 }} />
           </Card>
         ) : isEmpty ? (
           <Card style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>🔔</Text>
+            <Ionicons name="notifications-outline" size={44} color={colors.textMuted} style={styles.emptyIcon} />
             <Text style={styles.emptyTitle}>No alerts yet</Text>
             <Text style={styles.emptyDesc}>
               Operational notifications will appear here when dispatch sends updates.
@@ -167,7 +168,11 @@ export default function NotificationsScreen() {
                       { backgroundColor: `${getTypeColor(notif.type)}20` },
                     ]}
                   >
-                    <Text style={styles.iconText}>{getTypeIcon(notif.type)}</Text>
+                    <Ionicons
+                      name={getTypeIcon(notif.type)}
+                      size={18}
+                      color={getTypeColor(notif.type)}
+                    />
                   </View>
 
                   <View style={styles.notifBody}>
@@ -267,9 +272,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconText: {
-    fontSize: 18,
-  },
   notifBody: {
     flex: 1,
   },
@@ -316,7 +318,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     marginTop: 40,
   },
   emptyIcon: {
-    fontSize: 44,
     marginBottom: 12,
   },
   emptyTitle: {

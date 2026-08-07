@@ -11,10 +11,18 @@ import {
   ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../../store/auth.store';
 import { spacing, borderRadius } from '../../../theme';
 import { useThemeColors } from '../../../hooks/useThemeColors';
 import { Card } from '../../../components/ui/Card';
+
+type MenuItem = {
+  title: string;
+  subtitle: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  route: string;
+};
 
 export default function MoreMenu() {
   const colors = useThemeColors();
@@ -23,42 +31,35 @@ export default function MoreMenu() {
   const router = useRouter();
   const { user } = useAuthStore();
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       title: 'Driver Profile',
       subtitle: 'View license, vehicle, and employee details',
-      icon: '👤',
+      icon: 'person-outline',
       route: '/(app)/more/profile',
     },
     {
       title: 'Duty Attendance',
       subtitle: 'Check in, check out & view shift history',
-      icon: '📋',
+      icon: 'clipboard-outline',
       route: '/(app)/more/attendance',
-    },
-    {
-      title: 'My History',
-      subtitle: 'Attendance records and reported incidents',
-      icon: '🕐',
-      route: '/(app)/more/history',
     },
     {
       title: 'Report Incident',
       subtitle: 'Report mechanical, traffic, safety, or passenger issues',
-      icon: '⚠️',
+      icon: 'warning-outline',
       route: '/(app)/more/incident',
     },
     {
       title: 'Settings & Preferences',
       subtitle: 'Dark mode, notifications, language & logout',
-      icon: '⚙️',
+      icon: 'settings-outline',
       route: '/(app)/more/settings',
     },
   ];
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Driver Card */}
       <Card style={styles.profileCard}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
@@ -75,7 +76,6 @@ export default function MoreMenu() {
         </View>
       </Card>
 
-      {/* Menu List */}
       <View style={styles.menuList}>
         {menuItems.map((item) => (
           <TouchableOpacity
@@ -85,12 +85,12 @@ export default function MoreMenu() {
             accessibilityRole="button"
             accessibilityLabel={item.title}
           >
-            <Text style={styles.menuIcon}>{item.icon}</Text>
+            <Ionicons name={item.icon} size={22} color={colors.primary} style={styles.menuIcon} />
             <View style={styles.menuTextGroup}>
               <Text style={styles.menuTitle}>{item.title}</Text>
               <Text style={styles.menuSub}>{item.subtitle}</Text>
             </View>
-            <Text style={styles.chevron}>›</Text>
+            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </TouchableOpacity>
         ))}
       </View>
@@ -98,91 +98,83 @@ export default function MoreMenu() {
   );
 }
 
-
-
 function makeStyles(colors: ReturnType<typeof useThemeColors>) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: spacing.base,
-  },
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.lg,
-    padding: spacing.base,
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.md,
-  },
-  avatarText: {
-    color: colors.white,
-    fontWeight: '800',
-    fontSize: 20,
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  name: {
-    color: colors.textPrimary,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  role: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 2,
-  },
-  email: {
-    color: colors.textMuted,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  menuList: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.surfaceBorder,
-    overflow: 'hidden',
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: spacing.base,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.surfaceBorder,
-  },
-  menuIcon: {
-    fontSize: 22,
-    marginRight: spacing.md,
-  },
-  menuTextGroup: {
-    flex: 1,
-  },
-  menuTitle: {
-    color: colors.textPrimary,
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  menuSub: {
-    color: colors.textMuted,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  chevron: {
-    color: colors.textMuted,
-    fontSize: 20,
-    fontWeight: '700',
-  },
-});
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      padding: spacing.base,
+    },
+    profileCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: spacing.lg,
+      padding: spacing.base,
+    },
+    avatar: {
+      width: 52,
+      height: 52,
+      borderRadius: 26,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: spacing.md,
+    },
+    avatarText: {
+      color: colors.white,
+      fontWeight: '800',
+      fontSize: 20,
+    },
+    profileInfo: {
+      flex: 1,
+    },
+    name: {
+      color: colors.textPrimary,
+      fontSize: 16,
+      fontWeight: '700',
+    },
+    role: {
+      color: colors.primary,
+      fontSize: 12,
+      fontWeight: '600',
+      marginTop: 2,
+    },
+    email: {
+      color: colors.textMuted,
+      fontSize: 11,
+      marginTop: 2,
+    },
+    menuList: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      borderWidth: 1,
+      borderColor: colors.surfaceBorder,
+      overflow: 'hidden',
+    },
+    menuItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: spacing.base,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.surfaceBorder,
+    },
+    menuIcon: {
+      marginRight: spacing.md,
+    },
+    menuTextGroup: {
+      flex: 1,
+    },
+    menuTitle: {
+      color: colors.textPrimary,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    menuSub: {
+      color: colors.textMuted,
+      fontSize: 11,
+      marginTop: 2,
+    },
+  });
 }

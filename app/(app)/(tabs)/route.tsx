@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps';
+import { Ionicons } from '@expo/vector-icons';
 import { routesService } from '../../../services/routes';
 import { spacing, borderRadius } from '../../../theme';
 import { useThemeColors } from '../../../hooks/useThemeColors';
@@ -111,13 +112,13 @@ export default function RouteScreen() {
           </Card>
         ) : error ? (
           <Card style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>⚠️</Text>
+            <Ionicons name="warning-outline" size={44} color={colors.statusCritical} style={styles.emptyIcon} />
             <Text style={styles.emptyTitle}>{error}</Text>
             <Button title="RETRY" variant="primary" size="sm" onPress={loadRouteData} style={{ marginTop: 12 }} />
           </Card>
         ) : routes.length === 0 ? (
           <Card style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>🗺️</Text>
+            <Ionicons name="map-outline" size={44} color={colors.textMuted} style={styles.emptyIcon} />
             <Text style={styles.emptyTitle}>No routes available</Text>
             <Text style={styles.emptyDesc}>Routes assigned by dispatch will appear here.</Text>
           </Card>
@@ -362,7 +363,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
     marginTop: 24,
   },
   emptyIcon: {
-    fontSize: 40,
     marginBottom: 12,
   },
   emptyTitle: {

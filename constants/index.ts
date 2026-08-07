@@ -43,6 +43,7 @@ export const ASYNC_STORAGE_KEYS = {
   OFFLINE_CACHE_SCHEDULES: 'transitops_cache_schedules',
   PENDING_INCIDENTS: 'transitops_pending_incidents',
   UI_PREFERENCES: 'transitops_ui_preferences',
+  EXPO_PUSH_TOKEN: 'transitops_expo_push_token',
 } as const;
 
 export const KNUST_CENTER_COORDS = {

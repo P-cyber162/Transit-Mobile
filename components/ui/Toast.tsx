@@ -5,6 +5,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useUIStore } from '../../store/ui.store';
 import { borderRadius, spacing } from '../../theme';
 import { useThemeColors } from '../../hooks/useThemeColors';
@@ -43,7 +44,7 @@ export const Toast: React.FC = () => {
         accessibilityRole="button"
         accessibilityLabel="Dismiss notification"
       >
-        <Text style={styles.closeText}>✕</Text>
+        <Ionicons name="close" size={18} color={colors.white} />
       </TouchableOpacity>
     </View>
   );
@@ -80,11 +81,6 @@ function makeStyles(colors: ReturnType<typeof useThemeColors>) {
       minHeight: 44,
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    closeText: {
-      color: colors.white,
-      fontWeight: '700',
-      fontSize: 14,
     },
   });
 }

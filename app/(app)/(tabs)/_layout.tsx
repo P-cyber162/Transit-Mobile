@@ -4,17 +4,28 @@
 
 import React, { useMemo } from 'react';
 import { Tabs } from 'expo-router';
-import { Text, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../hooks/useThemeColors';
 
-function TabIcon({ emoji, focused, label }: { emoji: string; focused: boolean; label: string }) {
+function TabIcon({
+  name,
+  focused,
+  label,
+  color,
+}: {
+  name: keyof typeof Ionicons.glyphMap;
+  focused: boolean;
+  label: string;
+  color: string;
+}) {
   return (
     <View
       style={[styles.iconContainer, focused ? styles.iconFocused : null]}
       accessibilityLabel={label}
     >
-      <Text style={styles.emojiText}>{emoji}</Text>
+      <Ionicons name={name} size={20} color={color} />
     </View>
   );
 }
@@ -59,7 +70,9 @@ export default function TabLayout() {
         options={{
           title: 'Dashboard',
           tabBarAccessibilityLabel: 'Dashboard tab',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🏠" focused={focused} label="Dashboard" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon name={focused ? 'home' : 'home-outline'} focused={focused} label="Dashboard" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -67,7 +80,9 @@ export default function TabLayout() {
         options={{
           title: 'My Route',
           tabBarAccessibilityLabel: 'My Route tab',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🗺️" focused={focused} label="My Route" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon name={focused ? 'map' : 'map-outline'} focused={focused} label="My Route" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -75,7 +90,9 @@ export default function TabLayout() {
         options={{
           title: 'Trips',
           tabBarAccessibilityLabel: 'Trips tab',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🚌" focused={focused} label="Trips" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon name={focused ? 'bus' : 'bus-outline'} focused={focused} label="Trips" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -83,7 +100,14 @@ export default function TabLayout() {
         options={{
           title: 'Alerts',
           tabBarAccessibilityLabel: 'Alerts tab',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🔔" focused={focused} label="Alerts" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              name={focused ? 'notifications' : 'notifications-outline'}
+              focused={focused}
+              label="Alerts"
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>
@@ -100,8 +124,5 @@ const styles = StyleSheet.create({
   },
   iconFocused: {
     backgroundColor: 'rgba(29, 158, 117, 0.2)',
-  },
-  emojiText: {
-    fontSize: 18,
   },
 });

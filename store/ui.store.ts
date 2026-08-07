@@ -28,6 +28,7 @@ interface UIState extends UIPreferences {
   hideToast: () => void;
   toggleDarkMode: () => void;
   togglePushNotifications: () => void;
+  setPushNotificationsEnabled: (enabled: boolean) => void;
   setLanguage: (lang: string) => void;
   setRememberMeEmail: (email: string) => void;
   loadPreferences: () => Promise<void>;
@@ -65,6 +66,11 @@ export const useUIStore = create<UIState>((set, get) => ({
   togglePushNotifications: () => {
     const next = !get().pushNotificationsEnabled;
     set({ pushNotificationsEnabled: next });
+    get().savePreferences();
+  },
+
+  setPushNotificationsEnabled: (enabled) => {
+    set({ pushNotificationsEnabled: enabled });
     get().savePreferences();
   },
 
