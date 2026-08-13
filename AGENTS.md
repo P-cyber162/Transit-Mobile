@@ -1,4 +1,4 @@
-# TransitOps Driver — Agent Notes
+# TransitOps Driver — Agent Notes.
 
 This project targets **Expo SDK 54** (React Native 0.81 / React 19.1).
 
